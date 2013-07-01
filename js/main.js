@@ -229,11 +229,12 @@ function Picture() {
             return;
         }
         var options =   {   quality: 50,
-                            //destinationType: Camera.DestinationType.DATA_URL,
-							// sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+                           // destinationType: Camera.DestinationType.DATA_URL,
+							sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
                             encodingType: 0 ,    // 0=JPG 1=PNG
-							destinationType: navigator.camera.DestinationType.FILE_URI,
-                            sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+							saveToPhotoAlbum: true,
+							destinationType: Camera.DestinationType.FILE_URI,
+                            //sourceType: Camera.PictureSourceType.PHOTOLIBRARY
                         };
 try {
         navigator.camera.getPicture(
@@ -256,7 +257,7 @@ try {
 function uploadPhoto(imageURI) {
 try {
             var options = new FileUploadOptions();
-            options.fileKey='Filedata';//"file";
+            options.fileKey="file"; //'Filedata';//
             options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
             options.mimeType="image/jpeg";
 
