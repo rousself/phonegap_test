@@ -203,6 +203,11 @@ var app2={
 };
  //$(function() { app.refresh(); /*app2.init();*/ });
  
+ document.addEventListener("deviceready", onDeviceReady, false);
+ function onDeviceReady() { showAlert('listener','begin'); app.refresh();}
+ window.onload=onDeviceReady2;
+ function onDeviceReady2() { showAlert('window','begin'); app.refresh();} 
+ 
 function showAlert (message, title) {
 	$('#wrapper').prepend('<p>'+title+'<br/>'+message+'</p>');
   return;
