@@ -27,6 +27,7 @@ var app={
 	refresh: function() {	
 		var self=this;
 		//$.support.cors = true;
+		try {
 		$.ajax({
                       url: self._JsonUrl,
 					  type: 'POST',
@@ -49,7 +50,10 @@ var app={
 					  error: function( jqXHR, textStatus, error) {
 						showAlert( error, textStaus);
 					  }
-                    });
+					 
+                    }).fail(function(jqXHR, textStatus, error) { showAlert( error, textStaus); });
+		} 
+		catch(e) {showAlert( e, 'eee');}	
 		
 	},
 	refresh_realtime_connect: function() {
@@ -259,16 +263,16 @@ function uploadPhoto(imageURI) {
             options.params = params;
 
             var ft = new FileTransfer();
-            ft.upload(imageURI, EmscConfig.video.url, win, fail, options);
+            ft.upload(imageURI, EmscConfig.video.url, winPics, failPics, options);
 }
-function win(r) {
-	console.log("Code = " + r.responseCode);
+function winPics(r) {
+	showAlert("Code = " + r.responseCode,'pics');
 	console.log("Response = " + r.response);
 	console.log("Sent = " + r.bytesSent);
 }
 
-function fail(error) {
-	alert("An error has occurred: Code = " = error.code);
+function failPics(error) {
+	showAlert("An error has occurred: Code = " + error.code,'pics');
 	console.log("upload error source " + error.source);
 	console.log("upload error target " + error.target);
 }
