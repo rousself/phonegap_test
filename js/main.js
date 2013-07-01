@@ -251,6 +251,7 @@ function Picture() {
 }
 
 function uploadPhoto(imageURI) {
+try {
             var options = new FileUploadOptions();
             options.fileKey='Filedata';//"file";
             options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -264,17 +265,20 @@ function uploadPhoto(imageURI) {
 
             var ft = new FileTransfer();
             ft.upload(imageURI, EmscConfig.video.url, winPics, failPics, options);
+	} catch(e) {
+		showAlert(e.message,'error file');
+	}	
 }
 function winPics(r) {
 	showAlert("Code = " + r.responseCode,'pics');
-	console.log("Response = " + r.response);
-	console.log("Sent = " + r.bytesSent);
+	//console.log("Response = " + r.response);
+	//console.log("Sent = " + r.bytesSent);
 }
 
 function failPics(error) {
 	showAlert("An error has occurred: Code = " + error.code,'pics');
-	console.log("upload error source " + error.source);
-	console.log("upload error target " + error.target);
+	//console.log("upload error source " + error.source);
+	//console.log("upload error target " + error.target);
 }
 
  
