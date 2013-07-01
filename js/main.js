@@ -201,7 +201,7 @@ var app2={
 		this.registerEvents();
 	}
 };
- $(function() { app.refresh(); /*app2.init();*/ });
+ //$(function() { app.refresh(); /*app2.init();*/ });
  
 function showAlert (message, title) {
 	$('#wrapper').prepend('<p>'+title+'<br/>'+message+'</p>');
