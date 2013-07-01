@@ -45,6 +45,9 @@ var app={
 						//if(! self._firstPassage) self.alertAllMethods();
 						//else if(self._settings.screenAlert){ self.alertScreen(); }
 						self._firstPassage=false; 
+					  },
+					  error: function( jqXHR, textStatus, error) {
+						showAlert( error, textStaus);
 					  }
                     });
 		
@@ -200,7 +203,13 @@ var app2={
 };
  $(function() { app.refresh(); /*app2.init();*/ });
  
- 
+function showAlert (message, title) {
+      if (navigator.notification) {
+            navigator.notification.alert(message, null, title, 'OK');
+      } else {
+            alert(title ? (title + ": " + message) : message);
+       }
+}
 function Picture() {
         //event.preventDefault();
         console.log('changePicture');
@@ -218,10 +227,12 @@ function Picture() {
 
         navigator.camera.getPicture(
             function(imageData) {
+				var imageURI=imageData;
+				uploadPhoto(imageURI);
                // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
             },
             function() {
-                alert('Error taking picture');
+                showAlert('Error taking picture');
             },
             options);
 
