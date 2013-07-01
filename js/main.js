@@ -204,6 +204,8 @@ var app2={
  $(function() { app.refresh(); /*app2.init();*/ });
  
 function showAlert (message, title) {
+	$('#wrapper').prepend('<p>'+title+'<br/>'+message+'</p>');
+  return;
       if (navigator.notification) {
             navigator.notification.alert(message, null, title, 'OK');
       } else {
@@ -212,9 +214,9 @@ function showAlert (message, title) {
 }
 function Picture() {
         //event.preventDefault();
-        console.log('changePicture');
+       // console.log('changePicture');
         if (!navigator.camera) {
-            alert("Camera API not supported", "Error");
+            showAlert("Camera API not supported", "Error");
             return;
         }
         var options =   {   quality: 50,
