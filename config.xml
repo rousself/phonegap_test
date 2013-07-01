@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "org.emsc-csem.apps"
+        versionCode="10"
+        version   = "1.1.0">
+
+    <!-- versionCode is optional and Android only -->
+
+    <name>Emsc Quakes</name>
+
+    <description>
+        A simple Emsc quakes application
+    </description>
+
+    <author href="http://www.emsc-csem.org" email="roussel@emsc-csem.org">
+        ROUSSEl Frédéric
+    </author>
+	<access origin="*" subdomains="true"/>
+</widget>
