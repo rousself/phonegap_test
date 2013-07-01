@@ -208,9 +208,9 @@ var app2={
  //$(function() { app.refresh(); /*app2.init();*/ });
  
  document.addEventListener("deviceready", onDeviceReady, false);
- function onDeviceReady() { showAlert('listener','begin'); app.refresh();}
+ function onDeviceReady() { showAlert('listener','begin'); /*app.refresh();*/}
  window.onload=onDeviceReady2;
- function onDeviceReady2() { showAlert('window','begin'); app.refresh();} 
+ function onDeviceReady2() { showAlert('window','begin'); /*app.refresh();*/} 
  
 function showAlert (message, title) {
 	$('#wrapper').prepend('<p>'+title+'<br/>'+message+'</p>');
@@ -235,17 +235,20 @@ function Picture() {
 							destinationType: navigator.camera.DestinationType.FILE_URI,
                             sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
                         };
-
+try {
         navigator.camera.getPicture(
-            function(imageData) {
+            function(imageData) {  showAlert('ok picture','ok picture');
 				var imageURI=imageData;
 				uploadPhoto(imageURI);
                // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
             },
             function() {
-                showAlert('Error taking picture');
+                showAlert('Error taking picture','pb picture');
             },
             options);
+	} catch(e) {
+		showAlert(e.message,'error file');
+	}			
 
         return false;
 }
