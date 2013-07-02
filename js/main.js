@@ -280,7 +280,7 @@ function Picture() {
         //event.preventDefault();
        // console.log('changePicture');
 	    if (!navigator.geolocation) { showAlert("geolocation API not supported", "Error"); }
-		else	navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos)
+		else	navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
         if (!navigator.camera) {
             showAlert("Camera API not supported", "Error");
             return;
