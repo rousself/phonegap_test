@@ -19,8 +19,8 @@
 	
 	<access origin="*" subdomains="true"/>
 	
-	<preference name="phonegap-version" value="2.2.0" />
-	
+	<preference name="phonegap-version" value="2.0.0" />
+	<!--
 	 <feature name="App">
       <param name="android-package" value="org.apache.cordova.App"/>
     </feature>
@@ -78,7 +78,7 @@
     <feature name="InAppBrowser">
       <param name="android-package" value="org.apache.cordova.InAppBrowser"/>
     </feature>
-	
+	-->
 	
 <feature name="http://api.phonegap.com/1.0/camera"/>
 <feature name="http://api.phonegap.com/1.0/battery"/>
