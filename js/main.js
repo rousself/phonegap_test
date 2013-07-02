@@ -28,6 +28,7 @@ var app={
 		var self=this;
 		$.support.cors = true;
 		try {
+		console.log('send http request');
 		$.ajax({
                       url: self._JsonUrl,
 					  type: 'POST',
@@ -37,7 +38,7 @@ var app={
                       dataType: 'json',
                       success: function(req) { //alert(req);
 						var quakes=req.result; 
-						self._quakes=req.result;
+						self._quakes=req.result; console.log('success '+req);
 						self.createList();
 						//self._storage.setItem('saveAllJson',JSON.stringify(quakes));  
 						self._lastLastQuake=self._lastQuake;
@@ -54,11 +55,15 @@ var app={
                     }).fail(function(jqXHR, textStatus, error) { showAlert( error, textStaus); });
 		} 
 		catch(e) { console.log(e.message);}	
-		/*var xhr = new XMLHttpRequest();
+		
+		console.log('send http request 2');
+		try {
+		var xhr = new XMLHttpRequest();
 	
 		xhr.open("POST", self._JsonUrl, true);		
 		xhr.onreadystatechange =  function () {  //req.onload =
 			if(xhr.readyState == 4) { //alert(self._storage.constructor +'  '+print_r(self._storage));
+				console.log('success '+xhr.responseText);
 				var quakes=JSON.parse(xhr.responseText); quakes=quakes.result;    //this.alert('resp xhr '+JSON.stringify(quakes));
 				self._quakes=quakes;
 				self.createList();
@@ -66,7 +71,8 @@ var app={
 		};
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");   
 		xhr.send(self.getParams());
-	*/
+		} 
+		catch(e) { console.log(e.message);}	
 
 	},
 	refresh_realtime_connect: function() {
