@@ -278,7 +278,11 @@ function showAlert (message, title) {
 }
 function loc() {
 	if (!navigator.geolocation) { showAlert("geolocation API not supported", "Error"); }
-	else	navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
+	else {
+		console.log('launch pos');
+		navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
+	
+	}
 }
 function Picture() {
         //event.preventDefault();
@@ -295,7 +299,7 @@ function Picture() {
 							//saveToPhotoAlbum: true,
 							//destinationType: Camera.DestinationType.FILE_URI,
                             //sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-							quality: 50, targetWidth:600
+							quality: 50, targetWidth:600, mediaType:2
                         };
 try {
 	console.log('go picture');
@@ -353,4 +357,39 @@ function failPics(error) {
 	console.log("upload error target " + error.target);
 }
 
- 
+ function Picture2() {
+      
+        if (!navigator.camera) {
+            showAlert("Camera API not supported", "Error");
+            return;
+        }
+        var options =   {   //quality: 50,
+                           // destinationType: Camera.DestinationType.DATA_URL,
+							//sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+                            //encodingType: 0 ,    // 0=JPG 1=PNG
+							//saveToPhotoAlbum: true,
+							//destinationType: Camera.DestinationType.FILE_URI,
+                            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+							quality: 50, targetWidth:600, mediaType:2
+                        };
+try {
+	console.log('go picture');
+        navigator.camera.getPicture(
+            function(imageData) {  console.log('ok picture');
+				var imageURI=imageData;
+				var npath = imageData.replace("file://localhost",'');
+				var path = imageData.replace("file://localhost",'');
+				//See more at: http://blog.workinday.com/application_smartphone/308-phonegap-prendre-et-uploader-une-photo-sur-ios-et-android.html#sthash.aazXljrv.dpuf
+				uploadPhoto(npath);
+               // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
+            },
+            function() {
+                console.log('Error taking picture');
+            },
+            options);
+	} catch(e) {
+		console.log(e.message);
+	}			
+
+        return false;
+}
