@@ -245,7 +245,7 @@ var app2={
 		event.initEvent(name, true, true);
 	  } else {
 		event = document.createEventObject();
-		event.eventType = name;
+		event.eventType = name; event.type=name; event.name=name;
 	  }
 
   event.eventName = name;
