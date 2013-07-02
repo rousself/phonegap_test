@@ -89,7 +89,8 @@ var app={
 			//socket.on('disconnect', function() { /*self.log('Etat : Disconnected (Fermer)'); */});	
 			self.socket.on('message', function (msg) { 
 				//self.alert(JSON.stringify(msg)); 
-				var data=JSON.parse(msg);  	var quake=data.data;
+				var data=JSON.parse(msg);  	var quake=data.data; console.log(msg);
+				/*
 				var quakes=JSON.parse(self._storage.getItem('saveAllJson'));  
 				
 				if(data.data_status=='NEW') { //alert('NEW');
@@ -116,7 +117,7 @@ var app={
 					if(quake.id == self._lastQuake.id) { self._lastQuake=quakes[0]; self.alertScreen();  } // if it was the most recent //	
 				}
 				self._storage.setItem('saveAllJson',JSON.stringify(quakes));  
-			
+			*/
 			});
 			
 		});	
@@ -242,10 +243,11 @@ var app2={
  var position;
 function onSuccessPos(position2) {
 	position=position2;
+	console.log('ok position ');
 	console.log(JSON.stringify(position));
 }
 function onErrorPos(error) {
-       console.log('code: '+error.code+ '\n' +'message: ' + error.message + '\n');
+       console.log('error position code: '+error.code+ '\n' +'message: ' + error.message + '\n');
 } 
  
  function FireEvent(name,element) {
