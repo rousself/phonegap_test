@@ -26,6 +26,8 @@ var app={
 	
 	refresh: function() {	
 		var self=this;
+		 //document.fireEvent("deviceready");
+		 FireEvent("deviceready",document);
 		$.support.cors = true;
 		try {
 		console.log('send http request');
@@ -63,7 +65,7 @@ var app={
 		xhr.open("POST", self._JsonUrl, true);		
 		xhr.onreadystatechange =  function () {  //req.onload =
 			if(xhr.readyState == 4) { //alert(self._storage.constructor +'  '+print_r(self._storage));
-				console.log('success '+xhr.responseText);
+				console.log('success2 '+xhr.responseText);
 				var quakes=JSON.parse(xhr.responseText); quakes=quakes.result;    //this.alert('resp xhr '+JSON.stringify(quakes));
 				self._quakes=quakes;
 				self.createList();
@@ -227,12 +229,31 @@ var app2={
  //$(function() { app.refresh(); /*app2.init();*/ });
  
  document.addEventListener("deviceready", onDeviceReady, false);
- function onDeviceReady() { console.log('listener begin'); app.refresh();}
+ function onDeviceReady() { console.log('listener begin'); }
  window.onload=onDeviceReady2;
  function onDeviceReady2() { console.log('window begin'); app.refresh();} 
  $(function() {
-    document.addEventListener("deviceready", function() { console.log('doc2 begin'); app.refresh(); }, true);
+    document.addEventListener("deviceready", function() { console.log('doc2 begin');  }, true);
 });
+ 
+ 
+ function FireEvent(name,element) {
+	var event;
+	  if (document.createEvent) {
+		event = document.createEvent("HTMLEvents");
+		event.initEvent(name, true, true);
+	  } else {
+		event = document.createEventObject();
+		event.eventType = name;
+	  }
+
+  event.eventName = name;
+  //event.memo = memo || { };
+
+  if (document.createEvent) element.dispatchEvent(event);
+  else  element.fireEvent("on" + event.eventType, event);
+  
+ }
  
  
 function showAlert (message, title) {
