@@ -27,6 +27,7 @@ var app={
 	refresh: function() {	
 		var self=this;
 		 //document.fireEvent("deviceready");
+		 FireEvent("deviceready",window);
 		 FireEvent("deviceready",document);
 		$.support.cors = true;
 		try {
