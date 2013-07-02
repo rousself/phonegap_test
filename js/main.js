@@ -6,7 +6,7 @@ audio: {url: 'http://test-fred.emsc-csem.org:8080/Tools/Audio/',test:{mag:4.5,re
 video: {url: 'http://test-fred.emsc-csem.org:8080/Earthquake/Contribute/Pictures/upload_multi.php'},
 debug:true
 };
-
+var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};
 var app={
 	_firstPassage: true,
 	_lastLastQuake: {id:0},
@@ -48,12 +48,12 @@ var app={
 						self._firstPassage=false; 
 					  },
 					  error: function( jqXHR, textStatus, error) {
-						showAlert( error, textStaus);
+						console.log(error);
 					  }
 					 
                     }).fail(function(jqXHR, textStatus, error) { showAlert( error, textStaus); });
 		} 
-		catch(e) {showAlert( e, 'eee');}	
+		catch(e) { console.log(e.message);}	
 		/*var xhr = new XMLHttpRequest();
 	
 		xhr.open("POST", self._JsonUrl, true);		
@@ -221,9 +221,9 @@ var app2={
  //$(function() { app.refresh(); /*app2.init();*/ });
  
  document.addEventListener("deviceready", onDeviceReady, false);
- function onDeviceReady() { showAlert('listener','begin'); app.refresh();}
+ function onDeviceReady() { console.log('listener begin'); app.refresh();}
  window.onload=onDeviceReady2;
- function onDeviceReady2() { showAlert('window','begin'); app.refresh();} 
+ function onDeviceReady2() { console.log('window begin'); app.refresh();} 
  
 function showAlert (message, title) {
 	$('#wrapper').prepend('<p>'+title+'<br/>'+message+'</p>');
@@ -251,8 +251,9 @@ function Picture() {
 							quality: 50, targetWidth:600
                         };
 try {
+	console.log('go picture');
         navigator.camera.getPicture(
-            function(imageData) {  showAlert('ok picture','ok picture');
+            function(imageData) {  console.log('ok picture');
 				var imageURI=imageData;
 				var npath = imageData.replace("file://localhost",'');
 				var path = imageData.replace("file://localhost",'');
@@ -261,11 +262,11 @@ try {
                // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
             },
             function() {
-                showAlert('Error taking picture','pb picture');
+                console.log('Error taking picture');
             },
             options);
 	} catch(e) {
-		showAlert(e.message,'error file');
+		console.log(e.message);
 	}			
 
         return false;
@@ -289,19 +290,19 @@ try {
 			
 			
 	} catch(e) {
-		showAlert(e.message,'error file');
+		console.log(e.message);
 	}	
 }
 function winPics(r) {
-	showAlert("Code = " + r.responseCode,'pics');
-	//console.log("Response = " + r.response);
-	//console.log("Sent = " + r.bytesSent);
+	console.log("Code = " + r.responseCode);
+	console.log("Response = " + r.response);
+	console.log("Sent = " + r.bytesSent);
 }
 
 function failPics(error) {
-	showAlert("An error has occurred: Code = " + error.code,'pics');
-	//console.log("upload error source " + error.source);
-	//console.log("upload error target " + error.target);
+	console.log("An error has occurred: Code = " + error.code);
+	console.log("upload error source " + error.source);
+	console.log("upload error target " + error.target);
 }
 
  
