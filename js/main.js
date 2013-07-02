@@ -51,8 +51,9 @@ var app={
 						//else if(self._settings.screenAlert){ self.alertScreen(); }
 						self._firstPassage=false; 
 					  },
-					  error: function( jqXHR, textStatus, error) {
-						console.log('error http1 '+error);
+					  error: function( xhr, textStatus, error) {
+						console.log(xhr.responseText+'  '+xhr.status+'  '+textStatus);
+						console.log('error http1 '+error.message);
 					  }
 					 
                     }).fail(function(jqXHR, textStatus, error) { showAlert( 'fail error http1 ' +error, textStaus); });
@@ -232,12 +233,19 @@ var app2={
  
  document.addEventListener("deviceready", onDeviceReady, true);
  function onDeviceReady() { console.log('listener begin'); app.refresh();}
-// window.onload=onDeviceReady2;
+ //window.onload=onDeviceReady2;
  function onDeviceReady2() { console.log('window begin'); app.refresh();} 
  $(function() {
     document.addEventListener("deviceready", function() { console.log('doc2 begin');  }, true);
 });
  
+ var position;
+function onSuccessPos(position2) {
+	position=position2;
+}
+function onErrorPos(error) {
+       console.log('code: '+error.code+ '\n' +'message: ' + error.message + '\n');
+} 
  
  function FireEvent(name,element) {
 	var event;
@@ -270,6 +278,8 @@ function showAlert (message, title) {
 function Picture() {
         //event.preventDefault();
        // console.log('changePicture');
+	    if (!navigator.geolocation) { showAlert("geolocation API not supported", "Error"); }
+		else	navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos)
         if (!navigator.camera) {
             showAlert("Camera API not supported", "Error");
             return;
@@ -314,7 +324,7 @@ try {
 
             var params = new Object();
             params.evid = 0;
-            params.value2 = "param";
+            params.position = position;
 
             options.params = params;
 
