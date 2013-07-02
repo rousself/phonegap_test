@@ -20,7 +20,7 @@
 <!--	<access origin="*" subdomains="true"/> -->
 	<access origin="*" /> 
 	
-	<preference name="phonegap-version" value="2.0.0" />
+	<!-- <preference name="phonegap-version" value="2.0.0" /> -->
 	<!--
 	 <feature name="App">
       <param name="android-package" value="org.apache.cordova.App"/>

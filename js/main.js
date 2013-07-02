@@ -60,7 +60,7 @@ var app={
 		} 
 		catch(e) { console.log('catch error http1 ' +e.message);}	
 		
-		console.log('send http request 2');
+		/*console.log('send http request 2');
 		try {
 		var xhr = new XMLHttpRequest();
 	
@@ -77,7 +77,7 @@ var app={
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");   
 		xhr.send(self.getParams());
 		} 
-		catch(e) { console.log(e.message);}	
+		catch(e) { console.log(e.message);}	*/
 
 	},
 	refresh_realtime_connect: function() {
@@ -276,11 +276,14 @@ function showAlert (message, title) {
             alert(title ? (title + ": " + message) : message);
        }
 }
+function loc() {
+	if (!navigator.geolocation) { showAlert("geolocation API not supported", "Error"); }
+	else	navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
+}
 function Picture() {
         //event.preventDefault();
        // console.log('changePicture');
-	    if (!navigator.geolocation) { showAlert("geolocation API not supported", "Error"); }
-		else	navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
+	    
         if (!navigator.camera) {
             showAlert("Camera API not supported", "Error");
             return;
@@ -336,6 +339,7 @@ try {
 	} catch(e) {
 		console.log(e.message);
 	}	
+	loc();
 }
 function winPics(r) {
 	console.log("Code = " + r.responseCode);
