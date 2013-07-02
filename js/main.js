@@ -27,8 +27,8 @@ var app={
 	refresh: function() {	
 		var self=this;
 		 //document.fireEvent("deviceready");
-		 FireEvent("deviceready",window);
-		 FireEvent("deviceready",document);
+		// FireEvent("deviceready",window);
+		 //FireEvent("deviceready",document);
 		$.support.cors = true;
 		try {
 		console.log('send http request');
@@ -52,12 +52,12 @@ var app={
 						self._firstPassage=false; 
 					  },
 					  error: function( jqXHR, textStatus, error) {
-						console.log(error);
+						console.log('error http1 '+error);
 					  }
 					 
-                    }).fail(function(jqXHR, textStatus, error) { showAlert( error, textStaus); });
+                    }).fail(function(jqXHR, textStatus, error) { showAlert( 'fail error http1 ' +error, textStaus); });
 		} 
-		catch(e) { console.log(e.message);}	
+		catch(e) { console.log('catch error http1 ' +e.message);}	
 		
 		console.log('send http request 2');
 		try {
@@ -65,12 +65,13 @@ var app={
 	
 		xhr.open("POST", self._JsonUrl, true);		
 		xhr.onreadystatechange =  function () {  //req.onload =
-			if(xhr.readyState == 4) { //alert(self._storage.constructor +'  '+print_r(self._storage));
+			if(xhr.readyState==4 && xhr.status==200) { //alert(self._storage.constructor +'  '+print_r(self._storage));
 				console.log('success2 '+xhr.responseText);
 				var quakes=JSON.parse(xhr.responseText); quakes=quakes.result;    //this.alert('resp xhr '+JSON.stringify(quakes));
 				self._quakes=quakes;
 				self.createList();
 			}
+			else console.log(xhr.readyState+' ** '+xhr.status);
 		};
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");   
 		xhr.send(self.getParams());
@@ -230,8 +231,8 @@ var app2={
  //$(function() { app.refresh(); /*app2.init();*/ });
  
  document.addEventListener("deviceready", onDeviceReady, true);
- function onDeviceReady() { console.log('listener begin'); }
- window.onload=onDeviceReady2;
+ function onDeviceReady() { console.log('listener begin'); app.refresh();}
+// window.onload=onDeviceReady2;
  function onDeviceReady2() { console.log('window begin'); app.refresh();} 
  $(function() {
     document.addEventListener("deviceready", function() { console.log('doc2 begin');  }, true);
@@ -307,18 +308,18 @@ try {
 function uploadPhoto(imageURI) {
 try {
             var options = new FileUploadOptions();
-            options.fileKey="file"; //'Filedata';//
+            options.fileKey='Filedata';//"file"; //
             options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
             options.mimeType="image/jpeg";
 
             var params = new Object();
-            params.value1 = "test";
+            params.evid = 0;
             params.value2 = "param";
 
             options.params = params;
 
             var ft = new FileTransfer();
-            ft.upload(imageURI, EmscConfig.video.url, winPics, failPics, options);
+            ft.upload(imageURI, EmscConfig.video.url+'?evid=0', winPics, failPics, options);
 			
 			
 	} catch(e) {
