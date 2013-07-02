@@ -228,7 +228,7 @@ var app2={
 };
  //$(function() { app.refresh(); /*app2.init();*/ });
  
- document.addEventListener("deviceready", onDeviceReady, false);
+ document.addEventListener("deviceready", onDeviceReady, true);
  function onDeviceReady() { console.log('listener begin'); }
  window.onload=onDeviceReady2;
  function onDeviceReady2() { console.log('window begin'); app.refresh();} 
