@@ -17,7 +17,8 @@
         ROUSSEl Frédéric
     </author>
 	
-	<access origin="*" subdomains="true"/>
+<!--	<access origin="*" subdomains="true"/> -->
+	<access origin="*" /> 
 	
 	<preference name="phonegap-version" value="2.0.0" />
 	<!--

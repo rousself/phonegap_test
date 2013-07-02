@@ -242,6 +242,7 @@ var app2={
  var position;
 function onSuccessPos(position2) {
 	position=position2;
+	console.log(JSON.stringify(position));
 }
 function onErrorPos(error) {
        console.log('code: '+error.code+ '\n' +'message: ' + error.message + '\n');
@@ -329,7 +330,7 @@ try {
             options.params = params;
 
             var ft = new FileTransfer();
-            ft.upload(imageURI, EmscConfig.video.url+'?evid=0', winPics, failPics, options);
+            ft.upload(imageURI, EmscConfig.video.url/*+'?evid=0'*/, winPics, failPics, options);
 			
 			
 	} catch(e) {
