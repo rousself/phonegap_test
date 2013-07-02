@@ -18,6 +18,9 @@
     </author>
 	
 	<access origin="*" subdomains="true"/>
+	
+	<preference name="phonegap-version" value="2.2.0" />
+	
 	 <feature name="App">
       <param name="android-package" value="org.apache.cordova.App"/>
     </feature>
@@ -75,6 +78,17 @@
     <feature name="InAppBrowser">
       <param name="android-package" value="org.apache.cordova.InAppBrowser"/>
     </feature>
+	
+	
+<feature name="http://api.phonegap.com/1.0/camera"/>
+<feature name="http://api.phonegap.com/1.0/battery"/>
+<feature name="http://api.phonegap.com/1.0/contacts"/>
+<feature name="http://api.phonegap.com/1.0/file"/>
+<feature name="http://api.phonegap.com/1.0/geolocation"/>
+<feature name="http://api.phonegap.com/1.0/media"/>
+<feature name="http://api.phonegap.com/1.0/network"/>
+<feature name="http://api.phonegap.com/1.0/notification"/>
+	
     <!-- Deprecated plugins element. Remove in 3.0 -->
     <plugins>
     </plugins>
