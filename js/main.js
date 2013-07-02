@@ -230,6 +230,10 @@ var app2={
  function onDeviceReady() { console.log('listener begin'); app.refresh();}
  window.onload=onDeviceReady2;
  function onDeviceReady2() { console.log('window begin'); app.refresh();} 
+ $(function() {
+    document.addEventListener("deviceready", function() { console.log('doc2 begin'); app.refresh(); }, true);
+});
+ 
  
 function showAlert (message, title) {
 	$('#wrapper').prepend('<p>'+title+'<br/>'+message+'</p>');
