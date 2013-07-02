@@ -1,5 +1,5 @@
 var EmscConfig = {
-api: {url: 'http://test-fred.emsc-csem.org:8080/service/api/1.0/get.jsonp', key: 'apikey=addon', addon_key: '5A'},
+api: {url: 'http://test-fred.emsc-csem.org:8080/service/api/1.0/get.json', key: 'apikey=addon', addon_key: '5A'},
 socket_io: {url: 'http://test-fred.emsc-csem.org:8082/test'},
 settings: {timers:2, min_mag:1,notPos:'RC',screenAlert:true,shakeAlert:true,shakeAlertMag:1,audioAlert:true,audioAlertMag:2},
 audio: {url: 'http://test-fred.emsc-csem.org:8080/Tools/Audio/',test:{mag:4.5,region:'CENTRAL ITALY',ago:4}},
@@ -26,7 +26,7 @@ var app={
 	
 	refresh: function() {	
 		var self=this;
-		//$.support.cors = true;
+		$.support.cors = true;
 		try {
 		$.ajax({
                       url: self._JsonUrl,
@@ -34,7 +34,7 @@ var app={
                       data: self.getParams(),
                       cache: false,
 					  crossDomain: true,
-                      dataType: 'jsonp',
+                      dataType: 'json',
                       success: function(req) { //alert(req);
 						var quakes=req.result; 
 						self._quakes=req.result;
@@ -54,7 +54,20 @@ var app={
                     }).fail(function(jqXHR, textStatus, error) { showAlert( error, textStaus); });
 		} 
 		catch(e) {showAlert( e, 'eee');}	
-		
+		/*var xhr = new XMLHttpRequest();
+	
+		xhr.open("POST", self._JsonUrl, true);		
+		xhr.onreadystatechange =  function () {  //req.onload =
+			if(xhr.readyState == 4) { //alert(self._storage.constructor +'  '+print_r(self._storage));
+				var quakes=JSON.parse(xhr.responseText); quakes=quakes.result;    //this.alert('resp xhr '+JSON.stringify(quakes));
+				self._quakes=quakes;
+				self.createList();
+			}
+		};
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");   
+		xhr.send(self.getParams());
+	*/
+
 	},
 	refresh_realtime_connect: function() {
 		
@@ -228,19 +241,23 @@ function Picture() {
             showAlert("Camera API not supported", "Error");
             return;
         }
-        var options =   {   quality: 50,
+        var options =   {   //quality: 50,
                            // destinationType: Camera.DestinationType.DATA_URL,
-							sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-                            encodingType: 0 ,    // 0=JPG 1=PNG
-							saveToPhotoAlbum: true,
-							destinationType: Camera.DestinationType.FILE_URI,
+							//sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+                            //encodingType: 0 ,    // 0=JPG 1=PNG
+							//saveToPhotoAlbum: true,
+							//destinationType: Camera.DestinationType.FILE_URI,
                             //sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+							quality: 50, targetWidth:600
                         };
 try {
         navigator.camera.getPicture(
             function(imageData) {  showAlert('ok picture','ok picture');
 				var imageURI=imageData;
-				uploadPhoto(imageURI);
+				var npath = imageData.replace("file://localhost",'');
+				var path = imageData.replace("file://localhost",'');
+				//See more at: http://blog.workinday.com/application_smartphone/308-phonegap-prendre-et-uploader-une-photo-sur-ios-et-android.html#sthash.aazXljrv.dpuf
+				uploadPhoto(npath);
                // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
             },
             function() {
@@ -269,6 +286,8 @@ try {
 
             var ft = new FileTransfer();
             ft.upload(imageURI, EmscConfig.video.url, winPics, failPics, options);
+			
+			
 	} catch(e) {
 		showAlert(e.message,'error file');
 	}	
