@@ -3,7 +3,7 @@ api: {url: 'http://test-fred.emsc-csem.org:8080/service/api/1.0/get.json', key: 
 socket_io: {url: 'http://test-fred.emsc-csem.org:8082/test'},
 settings: {timers:2, min_mag:1,notPos:'RC',screenAlert:true,shakeAlert:true,shakeAlertMag:1,audioAlert:true,audioAlertMag:2},
 audio: {url: 'http://test-fred.emsc-csem.org:8080/Tools/Audio/',test:{mag:4.5,region:'CENTRAL ITALY',ago:4}},
-video: {url: 'http://test-fred.emsc-csem.org:8080/Earthquake/Contribute/Pictures/upload_multi.php'},
+video: {url: 'http://test-fred.emsc-csem.org:8080/Earthquake/Contribute/Pictures/upload_multi.php',params:{evid:0,lat:0,lng:0}},
 debug:true
 };
 var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};
@@ -33,7 +33,7 @@ var app={
 		try {
 		console.log('send http request');
 		$.ajax({
-                      url: self._JsonUrl,
+					  url: self._JsonUrl,
 					  type: 'POST',
                       data: self.getParams(),
                       cache: false,
@@ -47,9 +47,10 @@ var app={
 						self._lastLastQuake=self._lastQuake;
 						self._lastQuake=quakes[0]; //alert('normal '+JSON.stringify(quakes[0]));
 						//if(self.isNewQuake()) self.setBadgeNew(); 
-						//if(! self._firstPassage) self.alertAllMethods();
-						//else if(self._settings.screenAlert){ self.alertScreen(); }
+						if(! self._firstPassage) self.alertAllMethods();
+						else if(self._settings.screenAlert){ self.alertScreen(); }
 						self._firstPassage=false; 
+						self.refresh_realtime_connect();
 					  },
 					  error: function( xhr, textStatus, error) {
 						console.log(xhr.responseText+'  '+xhr.status+'  '+textStatus);
@@ -60,24 +61,6 @@ var app={
 		} 
 		catch(e) { console.log('catch error http1 ' +e.message);}	
 		
-		/*console.log('send http request 2');
-		try {
-		var xhr = new XMLHttpRequest();
-	
-		xhr.open("POST", self._JsonUrl, true);		
-		xhr.onreadystatechange =  function () {  //req.onload =
-			if(xhr.readyState==4 && xhr.status==200) { //alert(self._storage.constructor +'  '+print_r(self._storage));
-				console.log('success2 '+xhr.responseText);
-				var quakes=JSON.parse(xhr.responseText); quakes=quakes.result;    //this.alert('resp xhr '+JSON.stringify(quakes));
-				self._quakes=quakes;
-				self.createList();
-			}
-			else console.log(xhr.readyState+' ** '+xhr.status);
-		};
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");   
-		xhr.send(self.getParams());
-		} 
-		catch(e) { console.log(e.message);}	*/
 
 	},
 	refresh_realtime_connect: function() {
@@ -90,39 +73,65 @@ var app={
 			self.socket.on('message', function (msg) { 
 				//self.alert(JSON.stringify(msg)); 
 				var data=JSON.parse(msg);  	var quake=data.data; console.log(msg);
-				/*
-				var quakes=JSON.parse(self._storage.getItem('saveAllJson'));  
 				
-				if(data.data_status=='NEW') { //alert('NEW');
-					//quakes.push(quake);	
+				//var quakes=JSON.parse(self._storage.getItem('saveAllJson'));  
+				
+				if(data.data_status=='NEW') { 
 					for(var i in quakes) {
 						if(quake.time >= quakes[i].time) {
 							if(i==0) { self._lastQuake=quake; self.setBadgeNew(); self.alertAllMethods(); }
 							else { self.setBadgeNew(); } // new but not the most recent //
 							break;
 						}
-					} //self.alert('add to array '+i+'  '+quake.time);
+					} 
 					quakes.splice(i, 0, quake); //add to array
 				}		
 				else if(data.data_status=='UPDATE') { //alert('UPDATE');
 					for(var i in quakes) {
 						if(quakes[i].id == quake.id) { quakes.splice(i, 1, quake); break; }
-					}	//self.alert(i+'  '+quake.id +'  '+self._lastQuake.id);
+					}	
 					if(quake.id == self._lastQuake.id) { self._lastQuake=quake;  self.alertScreen();}
 				}
 				else if(data.data_status=='DELETE') { //alert('DEL');
 					for(var i in quakes) {
 						if(quakes[i].id == quake.id) { quakes.splice(i, 1); break; }
-					} 	//self.alert(i+'  '+quake.id +'  '+self._lastQuake.id);
+					} 	
 					if(quake.id == self._lastQuake.id) { self._lastQuake=quakes[0]; self.alertScreen();  } // if it was the most recent //	
 				}
-				self._storage.setItem('saveAllJson',JSON.stringify(quakes));  
-			*/
+				//self._storage.setItem('saveAllJson',JSON.stringify(quakes));  
+	
 			});
 			
 		});	
 		
 	},
+	isNewQuake: function() {
+		if(this._lastQuake.id != this._lastLastQuake.id) return true;
+		else return false;
+	},
+	setBadgeNew: function() { 
+		
+	},
+	unsetBadgeNew: function() { 
+		
+	},
+	alertAllMethods: function() {
+		if(this._settings.screenAlert){ this.alertScreen(); }
+		if(this.isNewQuake()) {
+			if(this._settings.audioAlert && (this._lastQuake.magnitude.mag.toFixed(1)>= this._settings.audioAlertMag)) { this.alertAudio();}
+			if(this._settings.shakeAlert && (this._lastQuake.magnitude.mag.toFixed(1)>= this._settings.shakeAlertMag)) { this.alertShake(); }
+		}
+	},
+	alertShake: function() {
+		navigator.notification.vibrate(2500); navigator.notification.beep(3);
+	},
+	alertAudio: function() {
+		var music=new AudioAlert({mag:this._lastQuake.magnitude.mag.toFixed(1),region:this._lastQuake.flynn_region,getago:this._lastQuake.time}); 
+		music.play(); //gaTrack('AudioAlert');
+	},
+	alertScreen: function() {
+	},
+	
 	
 	_storage: function() {
 	
@@ -158,84 +167,60 @@ var app={
 	
 };	
 
-var app2={
-	registerEvents: function() {
-        $(window).on('hashchange', $.proxy(this.route, this));
-        $('body').on('mousedown', 'a', function(event) {
-            $(event.target).addClass('tappable-active');
-        });
-        $('body').on('mouseup', 'a', function(event) {
-            $(event.target).removeClass('tappable-active');
-        });
-    },
 
-    route: function() {
-        var self = this;
-        var hash = window.location.hash;
-        if (!hash) {
-            if (this.homePage) {
-                this.slidePage(this.homePage);
-            } else {
-                this.homePage = new HomeView(this.store).render();
-                this.slidePage(this.homePage);
-            }
-            return;
-        }
-        var match = hash.match(this.detailsURL);
-        if (match) {
-            this.store.findById(Number(match[1]), function(employee) {
-                self.slidePage(new EmployeeView(employee).render());
-            });
-        }
-    },
-	slidePage: function(page) {
-
-        var currentPageDest,
-            self = this;
-
-        // If there is no current page (app just started) -> No transition: Position new page in the view port
-        if (!this.currentPage) {
-            $(page.el).attr('class', 'page stage-center');
-            $('body').append(page.el);
-            this.currentPage = page;
-            return;
-        }
-
-        // Cleaning up: remove old pages that were moved out of the viewport
-        $('.stage-right, .stage-left').not('.homePage').remove();
-
-        if (page === app.homePage) {
-            // Always apply a Back transition (slide from left) when we go back to the search page
-            $(page.el).attr('class', 'page stage-left');
-            currentPageDest = "stage-right";
-        } else {
-            // Forward transition (slide from right)
-            $(page.el).attr('class', 'page stage-right');
-            currentPageDest = "stage-left";
-        }
-
-        $('body').append(page.el);
-
-        // Wait until the new page has been added to the DOM...
-        setTimeout(function() {
-            // Slide out the current page: If new page slides from the right -> slide current page to the left, and vice versa
-            $(self.currentPage.el).attr('class', 'page transition ' + currentPageDest);
-            // Slide in the new page
-            $(page.el).attr('class', 'page stage-center transition');
-            self.currentPage = page;
-        });
-    },
+function AudioAlert() { 
+	this.music,	this.codec,	this.url;
+	this.uri= EmscConfig.audio.url;
+	this.params= ((arguments[0]) ? arguments[0] : EmscConfig.audio.test);
+	this.init= function() { 
+		this.setCodec(); 
+		this.getUri();
+	};
+	this.getUri= function() {
+		this.url=this.uri+'get.'+this.codec+'?';
+		for (var lab in this.params) {  this.url+=lab+"="+escape(this.params[lab])+"&"; } this.url=this.url.substring(0,this.url.length-1);
+	};
+	this.setCodec= function() { 
+		this.codec='mp3';
+	};
+	this.play= function() { 
+		var my_media = new Media(this.url,
+			function () {
+				console.log("playAudio():Audio Success");
+			},
+			// error callback
+			function (err) {
+				console.log("playAudio():Audio Error: " + err);
+			}
+		);
+		// Play audio
+		my_media.play();
+	};
 	
-	init: function() {
-		this.registerEvents();
-	}
-};
- //$(function() { app.refresh(); /*app2.init();*/ });
+	this.init();
+	return this;
+}
+
+
  
  document.addEventListener("deviceready", onDeviceReady, true);
  function onDeviceReady() { console.log('listener begin'); app.refresh();}
- //window.onload=onDeviceReady2;
- function onDeviceReady2() { console.log('window begin'); app.refresh();} 
+ window.onload=onDeviceReady2;
+ function onDeviceReady2() { 
+	console.log('window begin'); 
+	app.refresh(); 
+	
+     
+    $(".slide").click(function(){
+		$("#wrapper").css('position','fixed');
+		$("#wrapper").animate({"left": "-=1500px"}, 1000);
+        var url = $(this).attr("href");
+        $("#wrapper").animate({"left": "-=1500px"}, 1000, "linear", function(){window.location.href = url;} );
+        return false;
+    });
+ }
+
+ 
  $(function() {
     document.addEventListener("deviceready", function() { console.log('doc2 begin');  }, true);
 });
@@ -285,113 +270,4 @@ function loc() {
 		navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
 	
 	}
-}
-function Picture() {
-        //event.preventDefault();
-       // console.log('changePicture');
-	    
-        if (!navigator.camera) {
-            showAlert("Camera API not supported", "Error");
-            return;
-        }
-        var options =   {   //quality: 50,
-                           // destinationType: Camera.DestinationType.DATA_URL,
-							//sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-                            //encodingType: 0 ,    // 0=JPG 1=PNG
-							//saveToPhotoAlbum: true,
-							//destinationType: Camera.DestinationType.FILE_URI,
-                            //sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-							quality: 50, targetWidth:600, mediaType:2
-                        };
-try {
-	console.log('go picture');
-        navigator.camera.getPicture(
-            function(imageData) {  console.log('ok picture');
-				var imageURI=imageData;
-				var npath = imageData.replace("file://localhost",'');
-				var path = imageData.replace("file://localhost",'');
-				//See more at: http://blog.workinday.com/application_smartphone/308-phonegap-prendre-et-uploader-une-photo-sur-ios-et-android.html#sthash.aazXljrv.dpuf
-				uploadPhoto(npath);
-               // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
-            },
-            function() {
-                console.log('Error taking picture');
-            },
-            options);
-	} catch(e) {
-		console.log(e.message);
-	}			
-
-        return false;
-}
-
-function uploadPhoto(imageURI) {
-try {
-            var options = new FileUploadOptions();
-            options.fileKey='Filedata';//"file"; //
-            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-            options.mimeType="image/jpeg";
-
-            var params = new Object();
-            params.evid = 0;
-            params.position = position;
-
-            options.params = params;
-
-            var ft = new FileTransfer();
-            ft.upload(imageURI, EmscConfig.video.url/*+'?evid=0'*/, winPics, failPics, options);
-			
-			
-	} catch(e) {
-		console.log(e.message);
-	}	
-	loc();
-}
-function winPics(r) {
-	console.log("Code = " + r.responseCode);
-	console.log("Response = " + r.response);
-	console.log("Sent = " + r.bytesSent);
-}
-
-function failPics(error) {
-	console.log("An error has occurred: Code = " + error.code);
-	console.log("upload error source " + error.source);
-	console.log("upload error target " + error.target);
-}
-
- function Picture2() {
-      
-        if (!navigator.camera) {
-            showAlert("Camera API not supported", "Error");
-            return;
-        }
-        var options =   {   //quality: 50,
-                           // destinationType: Camera.DestinationType.DATA_URL,
-							//sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-                            //encodingType: 0 ,    // 0=JPG 1=PNG
-							//saveToPhotoAlbum: true,
-							//destinationType: Camera.DestinationType.FILE_URI,
-                            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-							quality: 50, targetWidth:600, mediaType:2
-                        };
-try {
-	console.log('go picture');
-        navigator.camera.getPicture(
-            function(imageData) {  console.log('ok picture');
-				var imageURI=imageData;
-				var npath = imageData.replace("file://localhost",'');
-				var path = imageData.replace("file://localhost",'');
-				//See more at: http://blog.workinday.com/application_smartphone/308-phonegap-prendre-et-uploader-une-photo-sur-ios-et-android.html#sthash.aazXljrv.dpuf
-				uploadPhoto(npath);
-               // $('#image').attr('src', "data:image/jpeg;base64," + imageData);
-            },
-            function() {
-                console.log('Error taking picture');
-            },
-            options);
-	} catch(e) {
-		console.log(e.message);
-	}			
-
-        return false;
 }
