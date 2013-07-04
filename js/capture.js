@@ -13,8 +13,11 @@ function captureError(error) {
 }
 
 function uploadToServer(mediaFilePath,name) {
+		var options = new FileUploadOptions();
+		options.fileName=name; options.fileKey='Filedata';
+		options.params=EmscConfig.video.params;
 		var ft = new FileTransfer();
-		ft.upload(mediaFilePath, EmscConfig.video.url/*+'?evid=0'*/, winTrans, failTrans, {fileName:name,fileKey:'Filedata',params:{EmscConfig.video.params}});
+		ft.upload(mediaFilePath, EmscConfig.video.url, winTrans, failTrans, options);
 }
 function winTrans(r) {
 	console.log("Code = " + r.responseCode);
@@ -32,7 +35,7 @@ function failTrans(error) {
 // A button will call this function
 function captureVideo() {
 	// Launch device video recording application,  allowing user to capture up to 2 video clips
-	navigator.device.capture.captureVideo(captureSuccess, captureError, {limit: 2});
+	navigator.device.capture.captureVideo(captureSuccess, captureError, {limit: 1});
 }
 function Picture(SourceType) {
 	navigator.camera.getPicture(

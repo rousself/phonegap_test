@@ -1,11 +1,4 @@
-var EmscConfig = {
-api: {url: 'http://test-fred.emsc-csem.org:8080/service/api/1.0/get.json', key: 'apikey=addon', addon_key: '5A'},
-socket_io: {url: 'http://test-fred.emsc-csem.org:8082/test'},
-settings: {timers:2, min_mag:1,notPos:'RC',screenAlert:true,shakeAlert:true,shakeAlertMag:1,audioAlert:true,audioAlertMag:2},
-audio: {url: 'http://test-fred.emsc-csem.org:8080/Tools/Audio/',test:{mag:4.5,region:'CENTRAL ITALY',ago:4}},
-video: {url: 'http://test-fred.emsc-csem.org:8080/Earthquake/Contribute/Pictures/upload_multi.php',params:{evid:0,lat:0,lng:0}},
-debug:true
-};
+
 var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};
 var app={
 	_firstPassage: true,
@@ -202,22 +195,15 @@ function AudioAlert() {
 }
 
 
+ var  isAndroid = (/android/gi).test(navigator.appVersion);
  
  document.addEventListener("deviceready", onDeviceReady, true);
  function onDeviceReady() { console.log('listener begin'); app.refresh();}
- window.onload=onDeviceReady2;
+ if(!isAndroid) window.onload=onDeviceReady2;
  function onDeviceReady2() { 
 	console.log('window begin'); 
 	app.refresh(); 
-	
-     
-    $(".slide").click(function(){
-		$("#wrapper").css('position','fixed');
-		$("#wrapper").animate({"left": "-=1500px"}, 1000);
-        var url = $(this).attr("href");
-        $("#wrapper").animate({"left": "-=1500px"}, 1000, "linear", function(){window.location.href = url;} );
-        return false;
-    });
+
  }
 
  
