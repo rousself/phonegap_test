@@ -29,7 +29,7 @@ function uploadToServer(mediaFilePath,name) {
 		}
 		options.params=EmscConfig.video.params;
 		$('#status').removeClass('hide');
-		var statusDom=$('#status').get(0);
+		var statusDom=$('#status').get(0); statusDom.innerHTML = "Loading..."
 		var ft = new FileTransfer();
 		ft.onprogress = function(progressEvent) {
 			if (progressEvent.lengthComputable) {
@@ -85,3 +85,8 @@ function Picture(SourceType) {
 function notify(){
 navigator.notification.vibrate(2500); navigator.notification.beep(3);
 }
+
+function testAudio() {
+	var music=new AudioAlert(); 
+		music.play();
+}	
