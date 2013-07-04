@@ -13,21 +13,46 @@ function captureError(error) {
 }
 
 function uploadToServer(mediaFilePath,name) {
+		var ext=name.split('.').pop();
 		var options = new FileUploadOptions();
 		options.fileName=name; options.fileKey='Filedata';
+		switch (ext) {
+			case "jpeg": 
+			  options.mimeType="image/jpeg";
+			  break;
+			case "png": 
+			  options.mimeType="image/png";
+			  break;  
+			 case "mp4": 
+			  options.mimeType="video/mp4";
+			  break; 
+		}
 		options.params=EmscConfig.video.params;
+		$('#status').removeClass('hide');
+		var statusDom=$('#status').get(0);
 		var ft = new FileTransfer();
+		ft.onprogress = function(progressEvent) {
+			if (progressEvent.lengthComputable) {
+				var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+				statusDom.innerHTML = perc + "% loaded...";
+			} else {
+				if(statusDom.innerHTML == "") statusDom.innerHTML = "Loading";
+				else statusDom.innerHTML += ".";
+			}
+		};
 		ft.upload(mediaFilePath, EmscConfig.video.url, winTrans, failTrans, options);
 }
 function winTrans(r) {
 	console.log("Code = " + r.responseCode);
 	console.log("Response = " + r.response);
 	console.log("Sent = " + r.bytesSent);
+	$('#status').addClass('hide');
 }
 function failTrans(error) {
 	console.log("An error has occurred: Code = " + error.code);
 	console.log("upload error source " + error.source);
 	console.log("upload error target " + error.target);
+	$('#status').addClass('hide');
 }
 
 
@@ -55,4 +80,8 @@ function Picture(SourceType) {
 				//sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
 				//encodingType: 0 ,    // 0=JPG 1=PNG
 				//saveToPhotoAlbum: true,
+}
+
+function notify(){
+navigator.notification.vibrate(2500); navigator.notification.beep(3);
 }
