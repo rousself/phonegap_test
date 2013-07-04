@@ -13,7 +13,7 @@
    <!-- <script src="js/iscroll.js"></script> -->
    <!--  <script src="js/employeelist.js"></script> -->
    <script>
-			
+		var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};	
      $(document).ready(function(){
 		$(".slide").click(function(){
 			$("#wrapper").animate({"left": "-=1500px"}, 1000);

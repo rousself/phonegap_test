@@ -1,5 +1,5 @@
 
-var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};
+
 var app={
 	_firstPassage: true,
 	_lastLastQuake: {id:0},
@@ -14,7 +14,13 @@ var app={
 
 	initDb: function() {
 		this._db= window.openDatabase("EmscDB", "1.0", "Emsc quakes", 200000);
-		this._db.transaction(this.createDb, this.transaction_error, populateDB_success);
+		this._db.transaction(this.createDb, this.transactionDb_error, this.populateDB_success);
+	},
+	transactionDb_error: function(error) {
+		console.log('transaction Db error '+error);
+	},
+	populateDB_success: function () {
+	
 	},
 	
 	refresh: function() {	
@@ -132,21 +138,48 @@ var app={
 	
 	
 	createDb: function(tx) {
-		tx.executeSql('DROP TABLE IF EXISTS emsc');
-		/*var sql = 
+		//tx.executeSql('DROP TABLE IF EXISTS emsc');
+		var sql = 
 			"CREATE TABLE IF NOT EXISTS emsc ( "+
-			"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			"firstName VARCHAR(50), " +
-			"lastName VARCHAR(50), " +
-			"title VARCHAR(50), " +
-			"department VARCHAR(50), " + 
-			"managerId INTEGER, " +
-			"city VARCHAR(50), " +
-			"officePhone VARCHAR(30), " + 
-			"cellPhone VARCHAR(30), " +
-			"email VARCHAR(30), " +
-			"picture VARCHAR(200))";
-		tx.executeSql(sql);*/
+			//"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			"evid INTEGER PRIMARY KEY, " +
+			"time FLOAT," +
+			"mag FLOAT, " +
+			"depth FLOAT, " +
+			"lat FLOAT, " + 
+			"lon FLOAT, " +
+			"allJson VARCHAR(500)) ";
+		tx.executeSql(sql, null,
+                function() {
+                    console.log('Create table success');
+                },
+                function(tx, error) {
+                    console.log('Create table error: ' + error.message);
+                });
+	},
+	insertDbAll: function() {
+		 var sql = "INSERT OR REPLACE INTO emsc " +
+            "(evid, time, mag, depth, lat,lon, allJson) " +
+            "VALUES (?, ?,  ?, ?, ?, ?, ?)";
+		var quake=this._quakes;
+		
+		 this._db.transaction(
+            function(tx) {
+			   for (var i = 0; i<quake.length; i++) { 
+					tx.executeSql(sql, [quake[i].evid, quake[i].time, quake[i].magnitude.mag, quake[i].depth.depth, quake[i].location.lat, quake[i].location.lon, JSON.stringify(quake[i])],
+							function() {
+								console.log('INSERT success');
+							},
+							function(tx, error) {
+								console.log('INSERT error: ' + error.message);
+							});
+				}
+			},
+			function(error) {
+                console.log("Transaction Error: " + error.message);
+            }
+        );
+			
 	},
 	
 	createList: function() {
@@ -156,6 +189,35 @@ var app={
 				 '<span class="mag">'+quake[i].magnitude.mag.toFixed(1)+'</span>' + 
 						'<strong>' + quake[i].flynn_region + '</strong><span class="resDetail">'+quake[i].time_str+'</span></a></li>');
 		}
+	},
+	
+	getAll: function() {
+		var self=this; var quakes;
+		this._db.transaction(
+            function(tx) {
+                var sql = "SELECT * from emsc ORDER BY time desc";
+
+                tx.executeSql(sql, [], function(tx, results) {
+                    var len = results.rows.length, quake = [],
+                        i = 0;
+                    for (; i < len; i = i + 1) {
+                        quake[i] = results.rows.item(i);
+						quakes[i]=JSON.parse(quake[i].allJson);
+                    }
+					self._quakes=quakes;
+                });
+            },
+            function(error) {
+               console.log("Transaction Error: " + error.message);
+            }
+        );
+	},
+	
+	
+	initapp: function() {
+		this.initDb();
+		this.getAll();
+		if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
 	}
 	
 };	
@@ -198,11 +260,11 @@ function AudioAlert() {
  var  isAndroid = (/android/gi).test(navigator.appVersion);
  
  document.addEventListener("deviceready", onDeviceReady, true);
- function onDeviceReady() { console.log('listener begin'); app.refresh();}
+ function onDeviceReady() { console.log('listener begin'); app.initapp();}
  if(!isAndroid) window.onload=onDeviceReady2;
  function onDeviceReady2() { 
 	console.log('window begin'); 
-	app.refresh(); 
+	app.initapp(); 
 
  }
 
