@@ -10,9 +10,8 @@
 	<script src="js/config.js"></script> 
 	<script src="js/capture.js"></script> 
 	<script>
-			
+		var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};	
      $(function() {
-		var console={log:function(txt) { $('#wrapper').prepend('<p>'+txt+'</p>'); }};
 		$(".slide").click(function(){
 			$("#wrapper").animate({"left": "-=1500px"}, 1000);
 			var url = $(this).attr("href");
