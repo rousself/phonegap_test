@@ -266,10 +266,12 @@ function AudioAlert() {
 	console.log('window begin'); 
 	app.initapp(); 
 	Push();
+	loc();
  }
 
  var pushNotification;
  function Push() {
+	$("#app-status-ul").append('<li>'+device.platform+'</li>');
 	try {
 		pushNotification = window.plugins.pushNotification;
 		if (device.platform == 'android' || device.platform == 'Android') {
@@ -354,14 +356,6 @@ function onNotificationGCM(e) {
 	}
 }
 
- 
- 
- 
- 
- 
- $(function() {
-    document.addEventListener("deviceready", function() { console.log('doc2 begin');  }, true);
-});
  
  var position;
 function onSuccessPos(position2) {
