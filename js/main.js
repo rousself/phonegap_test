@@ -3,6 +3,8 @@
 var app={
 	_firstPassage: true,
 	_lastLastQuake: {id:0},
+	_saveSettingsLabel: 'EMSC_App_Settings',
+	
 	_settings: EmscConfig.settings,
 	_JsonUrl: EmscConfig.api.url,
 	_apikey: EmscConfig.api.key,
@@ -23,7 +25,23 @@ var app={
 	
 	},
 	
+	
+	refresh_callback:function (req) {
+		var quakes=req.result; 
+		this._quakes=req.result; console.log('success '+req);
+		this.createList();
+		//this._storage.setItem('saveAllJson',JSON.stringify(quakes));  
+		this._lastLastQuake=this._lastQuake;
+		this._lastQuake=quakes[0]; //alert('normal '+JSON.stringify(quakes[0]));
+		//if(this.isNewQuake()) this.setBadgeNew(); 
+		if(! this._firstPassage) this.alertAllMethods();
+		else if(this._settings.screenAlert){ this.alertScreen(); }
+		this._firstPassage=false; 
+		//this.refresh_realtime_connect();
+	},
 	refresh: function() {	
+		this.post_request(this._JsonUrl,this.getParams(),this.refresh_callback);
+		/*
 		var self=this;
 		 //document.fireEvent("deviceready");
 		// FireEvent("deviceready",window);
@@ -59,7 +77,7 @@ var app={
                     }).fail(function(jqXHR, textStatus, error) { showAlert( 'fail error http1 ' +error, textStaus); });
 		} 
 		catch(e) { console.log('catch error http1 ' +e.message);}	
-		
+		*/
 
 	},
 	refresh_realtime_connect: function() {
@@ -131,10 +149,57 @@ var app={
 	alertScreen: function() {
 	},
 	
-	
-	_storage: function() {
-	
+	getStorage: function() {
+		if(window.localStorage) this._storage=window.localStorage;
+		else console.log('no storage');
+	},	
+	loadStoredSettings: function() {
+		var obj=this._storage.getItem(this._saveSettingsLabel);//this._storage.getItem(this._saveSettingsLabel);
+		if((typeof(obj)=='string') && (obj!='')) { this._settings=JSON.parse(obj); this.alert('loading new seetings from storage string: '+JSON.stringify(this._settings));}
+		else if((typeof(obj)=='object') && (obj!=null)) { this._settings=obj; this.alert('loading new seetings from storage obj: '+JSON.stringify(this._settings));}
+		else { this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings)); /*this.alert('pb load settings  type:'+typeof(obj)+' value:'+obj);*/ }
 	},
+	setExtensionKey: function(key) {
+		console.log(JSON.stringify(key));
+		this._settings.app_key=key.addon_key; this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings));
+	},
+	registerExtensionKey: function() {
+		if(typeof(this._settings.app_key)=='string') return;
+		else {
+			console.log('send register app');
+			this.post_request(EmscConfig.register.app.url,device,this.setExtensionKey);
+		}	
+	},
+	registerMyAppPush: function(key) {
+		if(typeof(this._settings.app_key)=='string') return;
+		else {
+			console.log('send push key to register');
+			this.post_request(EmscConfig.register.push.url,{ 'platform': device.platform.toLowerCase() , 'push_key': key });
+		}	
+	},
+	
+	post_request:function() {
+		$.support.cors = true;
+		var url= ((arguments[0]) ? arguments[0] : '');
+		if(url=='') return;
+		var data= ((arguments[1]) ? arguments[1] : '');
+		var callabck= ((arguments[2]) ? arguments[2] : console.log);
+		$.ajax({
+				  url: url,
+				  type: 'POST',
+				  data: data,
+				  cache: false,
+				  crossDomain: true,
+				  dataType: 'json',
+				  success: function(req) { callback(req); },
+				  error: function( xhr, textStatus, error) {
+							console.log(xhr.responseText+'  '+xhr.status+'  '+textStatus);
+							console.log('error http '+url+' ** '+error.message);
+				}
+			});	
+	},
+	
+	
 	
 	
 	createDb: function(tx) {
@@ -213,10 +278,15 @@ var app={
         );
 	},
 	
-	
+	alert: function(txt) {
+		console.log('Alert '+txt);
+	},
 	initapp: function() {
-		this.initDb();
-		this.getAll();
+		this.getStorage();
+		this.loadStoredSettings();
+		this.registerExtensionKey();
+		//this.initDb();
+		//this.getAll();
 		if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
 	}
 	
@@ -355,7 +425,8 @@ function onNotificationGCM(e) {
 			// Your GCM push server needs to know the regID before it can push to this device
 			// here is where you might want to send it the regID for later use.
 			console.log("regID = " + e.regid);
-			registerMyAppPush(e.regid);
+			//registerMyAppPush(e.regid);
+			app.registerMyAppPush(e.regid);
 		}
 		break;
 		
