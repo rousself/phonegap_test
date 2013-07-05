@@ -155,19 +155,19 @@ var app={
 	},	
 	loadStoredSettings: function() {
 		var obj=this._storage.getItem(this._saveSettingsLabel);//this._storage.getItem(this._saveSettingsLabel);
-		if((typeof(obj)=='string') && (obj!='')) { this._settings=JSON.parse(obj); this.alert('loading new seetings from storage string: '+JSON.stringify(this._settings));}
-		else if((typeof(obj)=='object') && (obj!=null)) { this._settings=obj; this.alert('loading new seetings from storage obj: '+JSON.stringify(this._settings));}
+		if((typeof(obj)=='string') && (obj!='')) { this._settings=JSON.parse(obj); this.alert('loading new settings from storage string: '+JSON.stringify(this._settings));}
+		else if((typeof(obj)=='object') && (obj!=null)) { this._settings=obj; this.alert('loading new settings from storage obj: '+JSON.stringify(this._settings));}
 		else { this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings)); /*this.alert('pb load settings  type:'+typeof(obj)+' value:'+obj);*/ }
 	},
 	setExtensionKey: function(key) {
-		console.log(JSON.stringify(key));
+		console.log(JSON.stringify(key)+'   '+JSON.stringify(this._settings)+'  '+key.addon_key);
 		this._settings.app_key=key.addon_key; this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings));
 	},
 	registerExtensionKey: function() {
 		if(typeof(this._settings.app_key)=='string') return;
 		else {
-			console.log('send register app');
-			this.post_request(EmscConfig.register.app.url,device,this.setExtensionKey);
+			console.log('send register app'); var self=this;
+			this.post_request(EmscConfig.register.app.url,{bob:'bob'},this.setExtensionKey); //device
 		}	
 	},
 	registerMyAppPush: function(key) {
@@ -191,7 +191,12 @@ var app={
 				  cache: false,
 				  crossDomain: true,
 				  dataType: 'json',
-				  success: function(req) { callback(req); },
+				  success: function(req) { 
+						//if( typeof req =='object') console.log('RESP '+print_r(req)); 
+						//else 
+						console.log('RESP '+req); 
+						callback(req); 
+				},
 				  error: function( xhr, textStatus, error) {
 							console.log(xhr.responseText+'  '+xhr.status+'  '+textStatus);
 							console.log('error http '+url+' ** '+error.message);
@@ -287,7 +292,7 @@ var app={
 		this.registerExtensionKey();
 		//this.initDb();
 		//this.getAll();
-		if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
+		//if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
 	}
 	
 };	
