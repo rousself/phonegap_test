@@ -288,6 +288,20 @@ function registerMyAppPush(key) {
 	
  }
 
+ document.addEventListener("backbutton", function(e) {
+	if($('.visible').attr('id')=='home') {	
+		// call this to get a new token each time. don't call it to reuse existing token.
+		pushNotification.unregister(successPushH, errorPushH);
+		e.preventDefault();
+		navigator.app.exitApp();
+	}	
+	else navigator.app.backHistory();
+ },false);
+ 
+ 
+ 
+ 
+ 
  var pushNotification;
  function Push() {
 	$("#app-status-ul").append('<li> Platform : '+device.platform+'</li>');
