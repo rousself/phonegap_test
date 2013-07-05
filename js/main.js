@@ -352,9 +352,9 @@ function registerMyAppPush(key) {
  if(!isAndroid) window.onload=onDeviceReady2;
  function onDeviceReady2() { 
 	console.log('window begin'); 
-	Push();
 	loc();
 	app.initapp(); 
+	Push();
 	
  }
 
