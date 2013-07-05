@@ -291,7 +291,7 @@ function registerMyAppPush(key) {
  document.addEventListener("backbutton", function(e) {
 	if($('.visible').attr('id')=='home') {	
 		// call this to get a new token each time. don't call it to reuse existing token.
-		pushNotification.unregister(successPushH, errorPushH);
+		//pushNotification.unregister(successPushH, errorPushH);
 		e.preventDefault();
 		navigator.app.exitApp();
 	}	
@@ -347,7 +347,7 @@ function onNotificationAPN(e) {
 // handle GCM notifications for Android
 function onNotificationGCM(e) {
 	$("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
-	
+	console.log('GCM '+print_r(e));
 	switch( e.event ) {
 		case 'registered':
 		if ( e.regid.length > 0 ) {
@@ -436,4 +436,26 @@ function loc() {
 		navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
 	
 	}
+}
+
+
+
+
+function print_r(theObj){
+	var str='';
+	if(theObj.constructor == Array ||	theObj.constructor == Object) {
+		str+="\n";
+		for(var p in theObj){
+			if((theObj[p].constructor == Array || theObj[p].constructor == Object)) { //&&("function"!=typeof(theObj))
+				str+="\t["+p+"] => "+typeof(theObj)+"\n";
+				str+="\n";
+				str+=print_r(theObj[p]);
+				str+="\n";
+			} else {
+				str+="\t["+p+"] => "+theObj[p]+"\n";
+			}
+		}
+		str+="\n";
+	}
+	return str;
 }
