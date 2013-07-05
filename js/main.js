@@ -259,19 +259,20 @@ function AudioAlert() {
 
  var  isAndroid = (/android/gi).test(navigator.appVersion);
  
- document.addEventListener("deviceready", onDeviceReady, true);
+ document.addEventListener("deviceready", onDeviceReady2, true);
  function onDeviceReady() { console.log('listener begin'); app.initapp();}
  if(!isAndroid) window.onload=onDeviceReady2;
  function onDeviceReady2() { 
 	console.log('window begin'); 
-	app.initapp(); 
 	Push();
 	loc();
+	app.initapp(); 
+	
  }
 
  var pushNotification;
  function Push() {
-	$("#app-status-ul").append('<li>'+device.platform+'</li>');
+	$("#app-status-ul").append('<li> Platform : '+device.platform+'</li>');
 	try {
 		pushNotification = window.plugins.pushNotification;
 		if (device.platform == 'android' || device.platform == 'Android') {
