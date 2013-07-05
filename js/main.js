@@ -183,7 +183,7 @@ var app={
 		var url= ((arguments[0]) ? arguments[0] : '');
 		if(url=='') return;
 		var data= ((arguments[1]) ? arguments[1] : '');
-		var callabck= ((arguments[2]) ? arguments[2] : console.log);
+		var callback= ((arguments[2]) ? arguments[2] : console.log);
 		$.ajax({
 				  url: url,
 				  type: 'POST',
