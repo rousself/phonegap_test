@@ -222,7 +222,6 @@ var app={
 	
 };	
 
-
 function AudioAlert() { 
 	this.music,	this.codec,	this.url;
 	this.uri= EmscConfig.audio.url;
@@ -255,6 +254,25 @@ function AudioAlert() {
 	this.init();
 	return this;
 }
+
+function registerMyAppPush(key) {
+	console.log('send push key to register');
+	$.support.cors = true;
+	$.ajax({
+			  url: EmscConfig.register.push.url,
+			  type: 'POST',
+			  data: { 'platform': device.platform.toLowerCase() , 'push_key': key  },
+			  cache: false,
+			  crossDomain: true,
+			  dataType: 'json',
+			  success: function(req) { },
+			  error: function( xhr, textStatus, error) {
+						console.log(xhr.responseText+'  '+xhr.status+'  '+textStatus);
+						console.log('error http1 '+error.message);
+			}
+		});	
+}
+
 
 
  var  isAndroid = (/android/gi).test(navigator.appVersion);
@@ -322,7 +340,8 @@ function onNotificationGCM(e) {
 			$("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
 			// Your GCM push server needs to know the regID before it can push to this device
 			// here is where you might want to send it the regID for later use.
-			console.log("regID = " + e.regID);
+			console.log("regID = " + e.regid);
+			registerMyAppPush(e.regid);
 		}
 		break;
 		

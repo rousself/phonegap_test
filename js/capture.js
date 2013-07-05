@@ -83,7 +83,7 @@ function Picture(SourceType) {
 }
 
 function notify(){
-navigator.notification.vibrate(2500); navigator.notification.beep(3);
+ navigator.notification.vibrate(2500); navigator.notification.beep(3);
 }
 
 function testAudio() {

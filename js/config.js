@@ -6,5 +6,6 @@ audio: {url: 'http://test-fred.emsc-csem.org:8080/Tools/Audio/',test:{mag:4.5,re
 video: {url: 'http://test-fred.emsc-csem.org:8080/Earthquake/Contribute/Pictures/upload_multi.php',params:{evid:0,lat:0,lng:0}},
 
 android: {senderID:'869856509191'},
+register: {push:{url:'http://test-mob.emsc-csem.org:8081/Register_App/'}},
 debug:true
 };
