@@ -90,11 +90,14 @@
 <feature name="http://api.phonegap.com/1.0/network"/>
 <feature name="http://api.phonegap.com/1.0/notification"/>
 	
-	
+	<plugin name="PushPlugin" value="com.plugin.gcm.PushPlugin" />
 	<gap:plugin name="GenericPush" />
-    <!-- Deprecated plugins element. Remove in 3.0 -->
-    <plugins>
+    <!-- Deprecated plugins element. Remove in 3.0 
+	  <plugins>
     </plugins>
+	
+	-->
+  
 	<!--
 	<plugins>
 		<plugin name="Device" value="org.apache.cordova.Device" />

@@ -268,7 +268,7 @@ function AudioAlert() {
 	Push();
  }
 
- 
+ var pushNotification;
  function Push() {
 	try {
 		pushNotification = window.plugins.pushNotification;
