@@ -36,11 +36,11 @@
 	-->
 	<gap:plugin name="GenericPush" />
 	
-	<icon src="icons/icon.png"  width="16" height="16" />
-	<icon src="icons/icon.png"  width="18" height="18" />
-	<icon src="icons/icon.png"  width="32" height="32" />
-	<icon src="icons/icon.png"  width="64" height="64" />
-	<icon src="icons/icon.png"  width="128" height="128" />
+	<icon src="icons/icon16.png"  width="16" height="16" />
+	<icon src="icons/icon18.png"  width="18" height="18" />
+	<icon src="icons/icon32.png"  width="32" height="32" />
+	<icon src="icons/icon64.png"  width="64" height="64" />
+	<icon src="icons/icon128.png"  width="128" height="128" />
 	
     <!-- Deprecated plugins element. Remove in 3.0 
 	  <plugins>

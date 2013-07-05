@@ -366,8 +366,10 @@ function onNotificationGCM(e) {
 				$("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
 
 				// if the notification contains a soundname, play it.
-				var my_media = new Media(e.sound/*"/android_asset/www/"+e.soundname*/);
-				my_media.play();
+				//var my_media = new Media(e.payload.soundToPlay/*"/android_asset/www/"+e.soundname*/);
+				//my_media.play();
+				var music=new AudioAlert(e.payload.soundToPlay); 
+				music.play();
 			}
 			else {	// otherwise we were launched because the user touched a notification in the notification tray.
 				if (e.coldstart)
