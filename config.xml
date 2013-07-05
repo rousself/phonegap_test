@@ -89,9 +89,11 @@
 <feature name="http://api.phonegap.com/1.0/media"/>
 <feature name="http://api.phonegap.com/1.0/network"/>
 <feature name="http://api.phonegap.com/1.0/notification"/>
-	
+	<!--
 	<plugin name="PushPlugin" value="com.plugin.gcm.PushPlugin" />
 	<gap:plugin name="GenericPush" />
+	-->
+	
     <!-- Deprecated plugins element. Remove in 3.0 
 	  <plugins>
     </plugins>

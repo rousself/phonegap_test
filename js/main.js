@@ -265,7 +265,7 @@ function AudioAlert() {
  function onDeviceReady2() { 
 	console.log('window begin'); 
 	app.initapp(); 
-	Push();
+	//Push();
  }
 
  var pushNotification;
