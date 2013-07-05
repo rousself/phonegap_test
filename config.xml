@@ -20,81 +20,27 @@
 <!--	<access origin="*" subdomains="true"/> -->
 	<access origin="*" /> 
 	<preference name="phonegap-version" value="2.9.0" />
-	
 	<!-- <preference name="phonegap-version" value="2.0.0" /> -->
-	<!--
-	 <feature name="App">
-      <param name="android-package" value="org.apache.cordova.App"/>
-    </feature>
-    <feature name="Geolocation">
-      <param name="android-package" value="org.apache.cordova.GeoBroker"/>
-    </feature>
-    <feature name="Device">
-      <param name="android-package" value="org.apache.cordova.Device"/>
-    </feature>
-    <feature name="Accelerometer">
-      <param name="android-package" value="org.apache.cordova.AccelListener"/>
-    </feature>
-    <feature name="Compass">
-      <param name="android-package" value="org.apache.cordova.CompassListener"/>
-    </feature>
-    <feature name="Media">
-      <param name="android-package" value="org.apache.cordova.AudioHandler"/>
-    </feature>
-    <feature name="Camera">
-      <param name="android-package" value="org.apache.cordova.CameraLauncher"/>
-    </feature>
-    <feature name="Contacts">
-      <param name="android-package" value="org.apache.cordova.ContactManager"/>
-    </feature>
-    <feature name="File">
-      <param name="android-package" value="org.apache.cordova.FileUtils"/>
-    </feature>
-    <feature name="NetworkStatus">
-      <param name="android-package" value="org.apache.cordova.NetworkManager"/>
-    </feature>
-    <feature name="Notification">
-      <param name="android-package" value="org.apache.cordova.Notification"/>
-    </feature>
-    <feature name="Storage">
-      <param name="android-package" value="org.apache.cordova.Storage"/>
-    </feature>
-    <feature name="FileTransfer">
-      <param name="android-package" value="org.apache.cordova.FileTransfer"/>
-    </feature>
-    <feature name="Capture">
-      <param name="android-package" value="org.apache.cordova.Capture"/>
-    </feature>
-    <feature name="Battery">
-      <param name="android-package" value="org.apache.cordova.BatteryListener"/>
-    </feature>
-    <feature name="SplashScreen">
-      <param name="android-package" value="org.apache.cordova.SplashScreen"/>
-    </feature>
-    <feature name="Echo">
-      <param name="android-package" value="org.apache.cordova.Echo"/>
-    </feature>
-    <feature name="Globalization">
-      <param name="android-package" value="org.apache.cordova.Globalization"/>
-    </feature>
-    <feature name="InAppBrowser">
-      <param name="android-package" value="org.apache.cordova.InAppBrowser"/>
-    </feature>
-	-->
+
 	
-<feature name="http://api.phonegap.com/1.0/camera"/>
-<feature name="http://api.phonegap.com/1.0/battery"/>
-<feature name="http://api.phonegap.com/1.0/contacts"/>
-<feature name="http://api.phonegap.com/1.0/file"/>
-<feature name="http://api.phonegap.com/1.0/geolocation"/>
-<feature name="http://api.phonegap.com/1.0/media"/>
-<feature name="http://api.phonegap.com/1.0/network"/>
-<feature name="http://api.phonegap.com/1.0/notification"/>
+	<feature name="http://api.phonegap.com/1.0/camera"/>
+	<feature name="http://api.phonegap.com/1.0/battery"/>
+	<feature name="http://api.phonegap.com/1.0/contacts"/>
+	<feature name="http://api.phonegap.com/1.0/file"/>
+	<feature name="http://api.phonegap.com/1.0/geolocation"/>
+	<feature name="http://api.phonegap.com/1.0/media"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+	<feature name="http://api.phonegap.com/1.0/notification"/>
 	<!--
 	<plugin name="PushPlugin" value="com.plugin.gcm.PushPlugin" />
 	-->
 	<gap:plugin name="GenericPush" />
 	
+	<icon src="icons/icon.png"  width="16" height="16" />
+	<icon src="icons/icon.png"  width="18" height="18" />
+	<icon src="icons/icon.png"  width="32" height="32" />
+	<icon src="icons/icon.png"  width="64" height="64" />
+	<icon src="icons/icon.png"  width="128" height="128" />
 	
     <!-- Deprecated plugins element. Remove in 3.0 
 	  <plugins>
