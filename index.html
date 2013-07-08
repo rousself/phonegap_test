@@ -27,7 +27,7 @@
 			var url = $(this).attr("href");
 			var currentP=$('.visible').attr('id');	
 			$("#returnB").attr("href",currentP); 
-			$(".visible div").not('.noslide').animate({"left": "-=1500px"}, 1000,"linear", function(){ $(this).parent().removeClass('visible').addClass('hidden');  });
+			$(".visible div").not('.noslide').animate({"left": "-=1500px"}, 1000,"linear", function(){ $('#'+currentP).removeClass('visible').addClass('hidden');  });
 			//console.log('current **'+currentP+' url ** '+url);
 
 			$("#"+url).removeClass('hidden').addClass('visible');

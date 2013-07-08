@@ -1,14 +1,14 @@
 
-
-var app={
+var app = {
 	_firstPassage: true,
 	_lastLastQuake: {id:0},
 	_saveSettingsLabel: 'EMSC_App_Settings',
-	
 	_settings: EmscConfig.settings,
 	_JsonUrl: EmscConfig.api.url,
 	_apikey: EmscConfig.api.key,
 	_addon_key: EmscConfig.api.addon_key,
+	_appdevice: {},//device,
+	
 	getParams: function() {
 		return 'addon_key='+this._addon_key+'&'+this._apikey+'&min_mag='+this._settings.min_mag; 
 		//return {addon_key: this._addon_key, };
@@ -40,7 +40,8 @@ var app={
 		//this.refresh_realtime_connect();
 	},
 	refresh: function() {	
-		this.post_request(this._JsonUrl,this.getParams(),this.refresh_callback);
+		var self=this;
+		this.post_request(this._JsonUrl,this.getParams(),function (req) { self.refresh_callback(req); });
 		/*
 		var self=this;
 		 //document.fireEvent("deviceready");
@@ -160,20 +161,20 @@ var app={
 		else { this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings)); /*this.alert('pb load settings  type:'+typeof(obj)+' value:'+obj);*/ }
 	},
 	setExtensionKey: function(key) {
-		console.log(JSON.stringify(key)+'   '+JSON.stringify(this._settings)+'  '+key.addon_key);
-		this._settings.app_key=key.addon_key; this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings));
+		this._settings.app_key=key; this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings));
 	},
-	registerExtensionKey: function() {
+	registerExtensionKey: function() { 
 		if(typeof(this._settings.app_key)=='string') return;
 		else {
 			console.log('send register app'); var self=this;
-			this.post_request(EmscConfig.register.app.url,{bob:'bob'},this.setExtensionKey); //device
+			this.post_request(EmscConfig.register.app.url,this._appdevice,function(req) { self.setExtensionKey(req.addon_key); }); 
 		}	
 	},
-	registerMyAppPush: function(key) {
-		if(typeof(this._settings.app_key)=='string') return;
+	registerMyAppPush: function(key) {  
+		if(typeof(this._settings.appPush_key)=='string') return;
 		else {
 			console.log('send push key to register');
+			this._settings.appPush_key=key; this._storage.setItem(this._saveSettingsLabel,JSON.stringify(this._settings));
 			this.post_request(EmscConfig.register.push.url,{ 'platform': device.platform.toLowerCase() , 'push_key': key });
 		}	
 	},
@@ -192,9 +193,7 @@ var app={
 				  crossDomain: true,
 				  dataType: 'json',
 				  success: function(req) { 
-						//if( typeof req =='object') console.log('RESP '+print_r(req)); 
-						//else 
-						console.log('RESP '+req); 
+						//console.log('RESP '+req); 
 						callback(req); 
 				},
 				  error: function( xhr, textStatus, error) {
@@ -257,7 +256,8 @@ var app={
 		for (var i = 0; i<quake.length; i++) { 
 			$('#quakesList').append('<li class="resRow"><a href="'+quake[i].url + '" class="handle">' +
 				 '<span class="mag">'+quake[i].magnitude.mag.toFixed(1)+'</span>' + 
-						'<strong>' + quake[i].flynn_region + '</strong><span class="resDetail">'+quake[i].time_str+'</span></a></li>');
+						'<strong>' + quake[i].flynn_region + '</strong><span class="resDetail">'+quake[i].time_str+'</span>'+
+						'<span>Depth: '+quake[i].depth.depth+' Km</span>'+'</a></li>');
 		}
 	},
 	
@@ -292,7 +292,7 @@ var app={
 		this.registerExtensionKey();
 		//this.initDb();
 		//this.getAll();
-		//if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
+		if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
 	}
 	
 };	
