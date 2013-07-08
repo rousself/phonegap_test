@@ -359,7 +359,7 @@ function registerMyAppPush(key) {
  function onDeviceReady2() { 
 	console.log('window begin'); 
 	app.initapp(); 
-	Push();
+	if(typeof(app._settings.appPush_key)!='string') Push();
 	
  }
 
