@@ -384,7 +384,7 @@ function registerMyAppPush(key) {
 		pushNotification = window.plugins.pushNotification;
 		if (device.platform == 'android' || device.platform == 'Android') {
 			$("#app-status-ul").append('<li>registering android</li>');
-			pushNotification.register(successPushH , errorPushH , {"senderID":EmscConfig.android.senderID,"ecb":"onNotificationGCM"});		// required!
+			pushNotification.register(successPushH , errorPushH , {"senderID":EmscConfig.android.senderID,"ecb":"onNotificationGCM","badge":"true","sound":"true","alert":"true"});		// required!
 		} else {
 			$("#app-status-ul").append('<li>registering iOS</li>');
 			pushNotification.register(tokenHandler, errorPushH, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
