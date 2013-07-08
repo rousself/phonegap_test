@@ -27,7 +27,7 @@ function uploadToServer(mediaFilePath,name) {
 			  options.mimeType="video/mp4";
 			  break; 
 		}
-		options.params=EmscConfig.video.params;
+		options.params=jQuery.extend(EmscConfig.video.params, EmscConfig.video.coords);//EmscConfig.video.params;
 		$('#status').removeClass('hide');
 		var statusDom=$('#status').get(0); statusDom.innerHTML = "Loading..."
 		var ft = new FileTransfer();
@@ -59,10 +59,12 @@ function failTrans(error) {
 
 // A button will call this function
 function captureVideo() {
+	localise();
 	// Launch device video recording application,  allowing user to capture up to 2 video clips
 	navigator.device.capture.captureVideo(captureSuccess, captureError, {limit: 1});
 }
 function Picture(SourceType) {
+	localise();
 	navigator.camera.getPicture(
             function(imageData) {  console.log('ok picture');
 				var npath = imageData.replace("file://localhost",'');
@@ -81,6 +83,20 @@ function Picture(SourceType) {
 				//encodingType: 0 ,    // 0=JPG 1=PNG
 				//saveToPhotoAlbum: true,
 }
+function localise() {
+	if (!navigator.geolocation) { console.log("geolocation API not supported", "Error"); }
+	else {
+		console.log('launch pos');
+		navigator.geolocation.getCurrentPosition(
+			function(position) {
+				EmscConfig.video.coords=position;
+			}, 
+			function(error) {console.log('error position code: '+error.code+ '\n' +'message: ' + error.message + '\n');}
+		);
+	}
+}
+
+
 
 function notify(){
  navigator.notification.vibrate(2500); navigator.notification.beep(3);

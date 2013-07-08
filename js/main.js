@@ -27,12 +27,11 @@ var app = {
 	
 	
 	refresh_callback:function (req) {
-		var quakes=req.result; 
 		this._quakes=req.result; console.log('success '+req);
 		this.createList();
-		//this._storage.setItem('saveAllJson',JSON.stringify(quakes));  
+		this._storage.setItem('saveAllJson',JSON.stringify(this._quakes));  
 		this._lastLastQuake=this._lastQuake;
-		this._lastQuake=quakes[0]; //alert('normal '+JSON.stringify(quakes[0]));
+		this._lastQuake=this._quakes[0]; //alert('normal '+JSON.stringify(quakes[0]));
 		//if(this.isNewQuake()) this.setBadgeNew(); 
 		if(! this._firstPassage) this.alertAllMethods();
 		else if(this._settings.screenAlert){ this.alertScreen(); }
@@ -290,9 +289,11 @@ var app = {
 		this.getStorage();
 		this.loadStoredSettings();
 		this.registerExtensionKey();
+		this._quakes=JSON.parse(this._storage.getItem('saveAllJson'));
 		//this.initDb();
 		//this.getAll();
 		if(! this._quakes ) { console.log('nothing in db'); this.refresh();}
+		else this.createList();
 	}
 	
 };	
@@ -357,7 +358,6 @@ function registerMyAppPush(key) {
  if(!isAndroid) window.onload=onDeviceReady2;
  function onDeviceReady2() { 
 	console.log('window begin'); 
-	loc();
 	app.initapp(); 
 	Push();
 	
@@ -472,15 +472,6 @@ function onNotificationGCM(e) {
 }
 
  
- var position;
-function onSuccessPos(position2) {
-	position=position2;
-	console.log('ok position ');
-	console.log(JSON.stringify(position));
-}
-function onErrorPos(error) {
-       console.log('error position code: '+error.code+ '\n' +'message: ' + error.message + '\n');
-} 
  
  function FireEvent(name,element) {
 	var event;
@@ -510,14 +501,7 @@ function showAlert (message, title) {
             alert(title ? (title + ": " + message) : message);
        }
 }
-function loc() {
-	if (!navigator.geolocation) { showAlert("geolocation API not supported", "Error"); }
-	else {
-		console.log('launch pos');
-		navigator.geolocation.getCurrentPosition(onSuccessPos, onErrorPos);
-	
-	}
-}
+
 
 
 
